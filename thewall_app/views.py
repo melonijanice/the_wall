@@ -1,4 +1,6 @@
 from datetime import datetime, timezone
+
+from django.contrib import messages
 from thewall_app.models import Comment, Message
 from login_app.models import User
 from django.shortcuts import redirect, render
@@ -30,4 +32,6 @@ def delete_message(request):
         time_delta = datetime.now(timezone.utc) - message.created_at
         if (time_delta.seconds)/60 < 30:
            message.delete()
+        else:
+            messages.error(request, 'This message was created more than 30 mins ago and cannot be deleted by user.')
         return redirect('/wall')
